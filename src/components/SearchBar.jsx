@@ -1,4 +1,3 @@
-// src/components/SearchBar.jsx
 export default function SearchBar({ query, setQuery }) {
   return (
     <input

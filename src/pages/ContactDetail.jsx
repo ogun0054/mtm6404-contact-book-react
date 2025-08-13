@@ -1,4 +1,3 @@
-// src/pages/ContactDetail.jsx
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";

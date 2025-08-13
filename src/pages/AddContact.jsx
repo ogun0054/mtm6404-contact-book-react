@@ -1,4 +1,3 @@
-// src/pages/AddContact.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { collection, addDoc } from "firebase/firestore";
