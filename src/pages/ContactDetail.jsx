@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { doc, getDoc } from "firebase/firestore";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { doc, getDoc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase/db";
 
 export default function ContactDetail() {
   const { id } = useParams();
   const [contact, setContact] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchContact = async () => {
@@ -13,10 +14,24 @@ export default function ContactDetail() {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         setContact({ id: docSnap.id, ...docSnap.data() });
+      } else {
+        setContact(null);
       }
     };
     fetchContact();
   }, [id]);
+
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to delete this contact?")) {
+      try {
+        await deleteDoc(doc(db, "contacts", id));
+        navigate("/");
+      } catch (error) {
+        console.error("Error deleting contact: ", error);
+        alert("Failed to delete contact. Please try again.");
+      }
+    }
+  };
 
   if (!contact) return <p>Loading...</p>;
 
@@ -43,14 +58,7 @@ export default function ContactDetail() {
         <Link to={`/edit/${id}`} className="btn-edit">
           Edit
         </Link>
-        <button
-          className="btn-delete"
-          onClick={() => {
-            if (window.confirm("Delete this contact?")) {
-              // We'll implement delete later
-            }
-          }}
-        >
+        <button className="btn-delete" onClick={handleDelete}>
           Delete
         </button>
         <Link to="/" className="btn-back">
